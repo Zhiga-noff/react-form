@@ -3,41 +3,63 @@ import { useForm } from 'react-hook-form';
 import style from './App.module.css';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { func } from 'prop-types';
 
-const fieldsScheme = yup.object().shape({
-  login: yup
-    .string()
-    .matches(/^[\w_]*$/, 'Может содержать лишь буквы, цифры и нижнее подчеркивание')
-    .max(20, 'Должно быть меньше 20 символов')
-    .min(3, 'Должно быть больше 3х символов'),
-});
+function changeValue(target, setValue) {
+  setValue(target.value);
+}
+
+function onSubmit(event, formData) {
+  event.preventDefault();
+  console.log(formData);
+}
 
 export const App = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      login: '',
-    },
-    resolver: yupResolver(fieldsScheme),
-  });
-
-  const loginError = errors.login?.message;
-
-  const onSubmit = (formData) => {
-    console.log(formData);
-  };
+  const [emailValue, setEmailValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+  const [secondaryPassword, setSecondaryPassword] = useState('');
 
   return (
     <div className={style.app}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {loginError && <div className={style.error}>{loginError}</div>}
-        <input type="text" name="login" {...register('login')} />
-        <button type={'submit'} disabled={!!loginError}>
-          Отправить
-        </button>
+      <h1 className={style.title}>Регистрация пользователя:</h1>
+      <form onSubmit={onSubmit}>
+        <div className={style.flexBox}>
+          <label htmlFor={'email'}>Введите свой email</label>
+          <input
+            type="email"
+            name="email"
+            id={'email'}
+            value={emailValue}
+            onChange={({ target }) => changeValue(target, setEmailValue)}
+          />
+        </div>
+        <div className={style.flexBox}>
+          <label htmlFor={'password'}>Введите пароль</label>
+          <input
+            type="password"
+            name="password"
+            id={'password'}
+            value={passwordValue}
+            onChange={({ target }) => changeValue(target, setPasswordValue)}
+          />
+        </div>
+        <div className={style.flexBox}>
+          <label htmlFor={'password-two'}>Повторите пароль</label>
+          <input
+            type="password"
+            name="password-two"
+            id={'password-two'}
+            value={secondaryPassword}
+            onChange={({ target }) => changeValue(target, setSecondaryPassword)}
+          />
+        </div>
+        <div className={style.errorMessage}></div>
+        <div className={style.containerButton}>
+          <button type={'submit'} className={`${style.button} ${style.buttonMain}`}>
+            Зарегистрироваться
+          </button>
+          <button className={`${style.button}`}>Сбросить</button>
+        </div>
       </form>
     </div>
   );

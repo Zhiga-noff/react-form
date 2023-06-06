@@ -1,21 +1,55 @@
 .app {
-    text-align: center;
+  background-color: aliceblue;
+
+  border: 0.3px solid grey;
+  border-radius: 1rem;
+
+  margin: 10rem auto 0;
+  padding: 2rem;
 }
 
-
-input {
-    margin-top: 30px;
+.title {
+  font-size: 1.5rem;
+  color: rgba(0, 141, 126, 0.86);
+  font-weight: 700;
+  margin-bottom: 2rem;
 }
 
-.content {
-    display: none;
+.flexBox {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
 }
 
-input[type='checkbox']:checked+.content {
-    display: block;
+.flexBox label {
+  margin-bottom: 10px;
 }
 
-.error {
-    color: red;
-    font-weight: 600;
+.flexBox input {
+  padding: 0.5rem 1rem;
+}
+
+.errorMessage {
+  height: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: tomato;
+}
+
+.containerButton {
+  display: flex;
+  justify-content: space-around;
+}
+
+.button {
+  padding: 1rem 2rem;
+  border-radius: 0.325rem;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonMain {
+  background-color: tomato;
+  color: aliceblue;
+  font-weight: 700;
 }
