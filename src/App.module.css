@@ -1,0 +1,21 @@
+.app {
+    text-align: center;
+}
+
+
+input {
+    margin-top: 30px;
+}
+
+.content {
+    display: none;
+}
+
+input[type='checkbox']:checked+.content {
+    display: block;
+}
+
+.error {
+    color: red;
+    font-weight: 600;
+}
