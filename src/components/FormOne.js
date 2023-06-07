@@ -1,5 +1,5 @@
 import style from '../App.module.css';
-import { WorkWithInput } from './non-yup/WorkWithInput';
+import { WorkWithInput } from './WorkWithInput';
 
 export const FormOne = ({ validateEmail, validatePassword }) => {
   return (

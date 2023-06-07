@@ -1,5 +1,5 @@
 import { InputField } from './InputField';
-import style from '../../App.module.css';
+import style from '../App.module.css';
 import { useState, useRef } from 'react';
 
 export const WorkWithInput = ({ validateEmail, validatePassword }) => {

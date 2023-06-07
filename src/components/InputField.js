@@ -1,4 +1,4 @@
-import style from '../../App.module.css';
+import style from '../App.module.css';
 
 export const InputField = ({ field, changeValue, valid }) => {
   const arrayFieldName = Object.keys(field);
