@@ -3,20 +3,16 @@ import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { InputField } from './InputField';
 
-export const WorkWithInput = ({ validateEmail, validatePassword }) => {
+const field = [
+  { name: 'email', textLabel: 'Введите свой email' },
+  { name: 'password', textLabel: 'Введите пароль' },
+  { name: 'secondaryPassword', textLabel: 'Повторите пароль' },
+];
+
+export const WorkWithInput = ({ fieldsSchema }) => {
   const submitButton = useRef(null);
-
-  const fieldsSchema = yup.object().shape({
-    email: yup.string().matches(validateEmail, 'Почта указана не верно'),
-    password: yup
-      .string()
-      .matches(validatePassword, 'Пароль должен содержать только латинский буквы и цифры')
-      .min(8, 'Пароль должен содержать больше 8 символов'),
-    secondaryPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
-  });
 
   const {
     register,
@@ -48,23 +44,7 @@ export const WorkWithInput = ({ validateEmail, validatePassword }) => {
 
   return (
     <form onSubmit={handleSubmit(sendFormData)}>
-      <div className={style.flexBox}>
-        <label htmlFor={'email'}>Введите свой email</label>
-        <input type="email" name="email" id={'email'} {...register('email')} />
-      </div>
-      <div className={style.flexBox}>
-        <label htmlFor={'password'}>Введите пароль</label>
-        <input type="text" name="password" id={'password'} {...register('password')} />
-      </div>
-      <div className={style.flexBox}>
-        <label htmlFor={'password-two'}>Повторите пароль</label>
-        <input
-          type="text"
-          name="password-two"
-          id={'password-two'}
-          {...register('secondaryPassword')}
-        />
-      </div>
+      <InputField field={field} register={register} />
       <div className={style.errorMessage}>{loginError}</div>
       <div className={style.containerButton}>
         <button
