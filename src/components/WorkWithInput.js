@@ -1,107 +1,81 @@
-import { InputField } from './InputField';
 import style from '../App.module.css';
 import { useState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export const WorkWithInput = ({ validateEmail, validatePassword }) => {
-  const [emailValue, setEmailValue] = useState('');
-  const [passwordValue, setPasswordValue] = useState('');
-  const [secondaryPassword, setSecondaryPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
   const submitButton = useRef(null);
 
-  const field = {
-    email: {
-      value: emailValue,
-      setValue: setEmailValue,
-      textLabel: 'Введите свой email',
+  const fieldsSchema = yup.object().shape({
+    email: yup.string().matches(validateEmail, 'Почта указана не верно'),
+    password: yup
+      .string()
+      .matches(validatePassword, 'Пароль должен содержать только латинский буквы и цифры')
+      .min(8, 'Пароль должен содержать больше 8 символов'),
+    secondaryPassword: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      secondaryPassword: '',
     },
-    password: {
-      value: passwordValue,
-      setValue: setPasswordValue,
-      textLabel: 'Введите пароль',
-    },
-    secondaryPassword: {
-      value: secondaryPassword,
-      setValue: setSecondaryPassword,
-      textLabel: 'Повторите пароль',
-    },
+    resolver: yupResolver(fieldsSchema),
+  });
+
+  const sendFormData = (formData) => {
+    console.log(formData);
+    reset();
   };
 
-  function changeValue(target, setValue) {
-    // if (
-    //   emailValue !== '' &&
-    //   passwordValue !== '' &&
-    //   secondaryPassword !== '' &&
-    //   passwordValue === secondaryPassword
-    // ) {
-    //   submitButton.current.focus();
-    // }
-    setValue(target.value);
-    setErrorMessage('');
-  }
+  const handleReset = () => {
+    reset();
+  };
 
-  function resetSet() {
-    setEmailValue('');
-    setPasswordValue('');
-    setSecondaryPassword('');
-    setErrorMessage('');
-  }
-
-  function validateField(event) {
-    if (event) {
-      event.preventDefault();
-    }
-
-    let error = null;
-
-    if (!validateEmail.test(emailValue)) {
-      error = 'Почта указана не верно';
-      setErrorMessage(error);
-      return false;
-    }
-
-    if (!validatePassword.test(passwordValue)) {
-      error = 'Пароль должен содержать только латинский буквы и цифры';
-      setErrorMessage(error);
-      return false;
-    }
-
-    if (passwordValue === '' || passwordValue.length < 8) {
-      error = 'Пароль должен содержать больше 8 символов';
-      setErrorMessage(error);
-      return false;
-    }
-
-    if (passwordValue !== secondaryPassword) {
-      error = 'Пароли не совпадают';
-      setErrorMessage(error);
-      return false;
-    }
-    return true;
-  }
+  const loginError =
+    errors.email?.message ||
+    errors.password?.message ||
+    errors.secondaryPassword?.message;
 
   return (
-    <form
-      onSubmit={(event) => {
-        if (validateField(event)) {
-          resetSet();
-          console.log({ email: emailValue, password: passwordValue });
-        }
-      }}
-    >
-      <InputField field={field} changeValue={changeValue} valid={validateField} />
-      <div className={style.errorMessage}>{errorMessage}</div>
+    <form onSubmit={handleSubmit(sendFormData)}>
+      <div className={style.flexBox}>
+        <label htmlFor={'email'}>Введите свой email</label>
+        <input type="email" name="email" id={'email'} {...register('email')} />
+      </div>
+      <div className={style.flexBox}>
+        <label htmlFor={'password'}>Введите пароль</label>
+        <input type="text" name="password" id={'password'} {...register('password')} />
+      </div>
+      <div className={style.flexBox}>
+        <label htmlFor={'password-two'}>Повторите пароль</label>
+        <input
+          type="text"
+          name="password-two"
+          id={'password-two'}
+          {...register('secondaryPassword')}
+        />
+      </div>
+      <div className={style.errorMessage}>{loginError}</div>
       <div className={style.containerButton}>
         <button
           type={'submit'}
           className={`${style.button} ${style.buttonMain}`}
-          disabled={errorMessage !== ''}
+          disabled={!!loginError}
           ref={submitButton}
         >
           Зарегистрироваться
         </button>
-        <button type={'button'} className={style.button} onClick={resetSet}>
+        <button type={'button'} className={style.button} onClick={handleReset}>
           Сбросить
         </button>
       </div>
