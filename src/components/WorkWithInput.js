@@ -1,7 +1,6 @@
 import style from '../App.module.css';
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField } from './InputField';
 
